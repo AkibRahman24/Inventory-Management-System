@@ -1,32 +1,69 @@
-import { Routes, Route } from 'react-router-dom'
-import './App.css'
-import Login from './components/pages/Login'
-import Register from './components/pages/Register'
-import Dashboard from './components/pages/Dashboard'
-import Products from './components/pages/Products'
-import Profile from './components/pages/Profile'
-import Sales from './components/pages/Sales'
-import Suppliers from './components/pages/Suppliers'
-import RootLayout from './components/layout/RootLayout'
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
+import Login from "./components/pages/Login";
+import Register from "./components/pages/Register";
+import AdminDashboard from "./components/pages/AdminDashboard";
+import SellerDashboard from "./components/pages/SellerDashboard";
+import Products from "./components/pages/Products";
+import Profile from "./components/pages/Profile";
+import Sales from "./components/pages/Sales";
+import Suppliers from "./components/pages/Suppliers";
+import RootLayout from "./components/layout/RootLayout";
+import Root from "./components/Root";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
+import Categories from "./components/pages/Categories";
 
 function App() {
-  
-
   return (
     <>
       <Routes>
-      <Route path="/" element={<RootLayout />}>
-        <Route index element={<Login/>} />          
-        <Route path="register" element={<Register/>} /> 
-        <Route path="dashboard" element={<Dashboard/>} /> 
-        <Route path="products" element={<Products/>} /> 
-        <Route path="profile" element={<Profile/>} /> 
-        <Route path="sales" element={<Sales/>} /> 
-        <Route path="suppliers" element={<Suppliers/>} /> 
-      </Route>
-    </Routes>
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<Root />} />
+          <Route path="login" element={<Login />} />
+          <Route
+            path="admindashboard"
+            element={
+              <ProtectedRoutes requireRole={"admin"}>
+                <AdminDashboard />
+              </ProtectedRoutes>
+            }
+          />
+          <Route path="sellerdashboard" element={<SellerDashboard />} />
+          <Route path="register" element={<Register />} />
+          <Route path="products" element={<Products />} />
+          <Route path="categories" element={<Categories />} />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoutes requireRole={["admin"]}>
+                <Profile />
+              </ProtectedRoutes>
+            }
+          />
+
+          <Route
+            path="/suppliers"
+            element={
+              <ProtectedRoutes requireRole={["admin"]}>
+                <Suppliers />
+              </ProtectedRoutes>
+            }
+          />
+
+          <Route path="sales" element={<Sales />} />
+          <Route
+            path="unauthorized"
+            element={
+              <h1 className="font-bold text-5xl text-red-800 mt-20 mx-auto">
+                Unauthorized Access
+              </h1>
+            }
+          />
+        </Route>
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

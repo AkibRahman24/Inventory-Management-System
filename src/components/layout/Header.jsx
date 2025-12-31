@@ -1,120 +1,80 @@
-import React from "react";
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
-import Container from "../Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Home,
+  Layers,
+  Package,
+  Truck,
+  ShoppingCart,
+  User,
+  LogOut,
+} from "lucide-react";
 import Images from "../Images";
-import HeadLogo from "/src/assets/header logo.png";
-import { Button } from "@/components/ui/button"
+import Headlogo from "/src/assets/header logo.png";
+import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
-  return (
-    <>
-      <div className="bg-[#0C2B4E] ">
-        <Container>
-          <div className="flex items-center">
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
-            <Images imgSrc={HeadLogo} className={`w-[60px]`} imgAlt={'HeadLogo'}/>
-            <Menubar className="m-auto border-none shadow-none bg-transparent flex justify-center gap-x-3">
-            <MenubarMenu>
-              <Link to={"/dashboard"}>
-                <MenubarTrigger
-                  className="text-green-400 g-transparent 
-  
-  // Custom fix for component libraries
-  data-[state=open]:bg-transparent 
-  data-[state=open]:text-green-400
-  data-[state=active]:bg-transparent 
-  data-[state=active]:text-green-400
-  
-  // Also keep the standard fixes
-  focus:bg-transparent focus:text-green-400 
-  active:bg-transparent active:text-green-400 cursor-pointer text-xl font-medium"
-                >
-                  Dashboard
-                </MenubarTrigger>
-              </Link>
-            </MenubarMenu>
-            <MenubarMenu>
-              <Link to={"products"}>
-                <MenubarTrigger
-                  className="text-green-400 g-transparent 
-  
-  // Custom fix for component libraries
-  data-[state=open]:bg-transparent 
-  data-[state=open]:text-green-400
-  data-[state=active]:bg-transparent 
-  data-[state=active]:text-green-400
-  
-  // Also keep the standard fixes
-  focus:bg-transparent focus:text-green-400 
-  active:bg-transparent active:text-green-400 cursor-pointer text-xl font-medium"
-                >
-                  Products
-                </MenubarTrigger>
-              </Link>
-            </MenubarMenu>
-            <MenubarMenu>
-              <Link to={"sales"}>
-                <MenubarTrigger
-                  className="text-green-400 g-transparent 
-  
-  // Custom fix for component libraries
-  data-[state=open]:bg-transparent 
-  data-[state=open]:text-green-400
-  data-[state=active]:bg-transparent 
-  data-[state=active]:text-green-400
-  
-  // Also keep the standard fixes
-  focus:bg-transparent focus:text-green-400 
-  active:bg-transparent active:text-green-400 cursor-pointer text-xl font-medium"
-                >
-                  Sales
-                </MenubarTrigger>
-              </Link>
-            </MenubarMenu>
-            <MenubarMenu>
-              <Link to={"suppliers"}>
-                <MenubarTrigger
-                  className="text-green-400 g-transparent 
-  
-  // Custom fix for component libraries
-  data-[state=open]:bg-transparent 
-  data-[state=open]:text-green-400
-  data-[state=active]:bg-transparent 
-  data-[state=active]:text-green-400
-  
-  // Also keep the standard fixes
-  focus:bg-transparent focus:text-green-400 
-  active:bg-transparent active:text-green-400 cursor-pointer text-xl font-medium"
-                >
-                  Suppliers
-                </MenubarTrigger>
-              </Link>
-              <Link to={"profile"}>
-                <MenubarTrigger
-                  className="text-green-400 g-transparent 
-  
-  // Custom fix for component libraries
-  data-[state=open]:bg-transparent 
-  data-[state=open]:text-green-400
-  data-[state=active]:bg-transparent 
-  data-[state=active]:text-green-400
-  
-  // Also keep the standard fixes
-  focus:bg-transparent focus:text-green-400 
-  active:bg-transparent active:text-green-400 cursor-pointer text-xl font-medium"
-                >
-                  Profile
-                </MenubarTrigger>
-              </Link>
-            </MenubarMenu>
-          </Menubar>
-          <Button variant="outline" className='text-green-400 my-auto'>Logout</Button>
-          </div>
-          
-        </Container>
+  const baseItem =
+    "flex items-center gap-3 px-4 py-2 rounded-lg transition text-gray-300 hover:bg-[#3CA07E] hover:text-white";
+
+  const handleLink = () => {
+    if (user.role === "admin") {
+      navigate("/admindashboard");
+    } else {
+      navigate("/sellerdashboard");
+    }
+  };
+
+  return (
+    <aside className="w-64 h-screen bg-[#0C2B4E] fixed left-0 top-0 flex flex-col">
+      
+      {/* Logo */}
+      <div className="px-6 py-8 border-b border-gray-800 flex justify-center">
+        <Images className="w-16" imgSrc={Headlogo} />
       </div>
-    </>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-4 space-y-1 text-sm" 
+      onChange={handleLink}>
+        <div onClick={handleLink} className={baseItem}>
+          <Home size={25} /> Dashboard
+        </div>
+
+        <Link to="/categories" className={baseItem}>
+          <Layers size={25} /> Categories
+        </Link>
+
+        <Link to="/products" className={baseItem}>
+          <Package size={25} /> Products
+        </Link>
+
+        <Link to="/suppliers" className={baseItem}>
+          <Truck size={25} /> Suppliers
+        </Link>
+
+        <Link to="/sales" className={baseItem}>
+          <ShoppingCart size={25} /> Orders
+        </Link>
+
+        <Link to="/profile" className={baseItem}>
+          <User size={25} /> Profile
+        </Link>
+      </nav>
+
+      {/* Logout */}
+      <div className="p-4 border-t border-gray-800">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-3 w-full px-4 py-2 rounded-lg
+          text-gray-300 hover:bg-[#3CA07E] hover:text-white transition"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
+      </div>
+    </aside>
   );
 };
 
